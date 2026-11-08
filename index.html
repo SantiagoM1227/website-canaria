@@ -95,11 +95,11 @@ const GC=window.GC_ATLAS;
 // Estos lugares NO se incluyen en los 22 planes aptos para una guagua directa desde Guía.
 const COAST_SITES=[
  {id:'punta',label:'Punta de Gáldar',short:'P',lat:28.1692257,lon:-15.6834677,
-  intro:'Pueblo costero y paisaje de roca volcánica. El Ayuntamiento de Gáldar describe una piscina natural en esta zona; el marcador corresponde al núcleo de población, no a una entrada de baño verificada.'},
+  intro:'Pueblo costero y paisaje de roca volcánica. El Ayuntamiento de Gáldar describe una piscina natural en esta zona.'},
  {id:'furnia',label:'La Furnia',short:'F',lat:28.1610687,lon:-15.6746193,
-  intro:'Núcleo costero con piscina natural junto a un acantilado. El Ayuntamiento indica que se accede por una escalera larga; no está recomendado entrar al agua sin comprobar el estado del mar.'},
+  intro:'Núcleo costero con piscina natural junto a un acantilado. El Ayuntamiento indica que se accede por una escalera larga.'},
  {id:'roques',label:'Los Dos Roques',short:'R',lat:28.1579245,lon:-15.6704961,
-  intro:'Pequeño núcleo de la costa volcánica al norte de Gáldar. Punto de referencia geográfico, no acceso verificado a un sendero o zona de baño.'}
+  intro:'Pequeño núcleo de la costa volcánica al norte de Gáldar.'}
 ];
 
 const ORIGIN={lon:-15.63,lat:28.14}, EARTH=6378137;
@@ -296,13 +296,13 @@ function openCoastInfo(id){
  const s=COAST_SITES.find(a=>a.id===id);if(!s)return;
  document.getElementById('detailContent').innerHTML=`<div class="sheethead"><span class="eyebrow" style="color:#ad702d">🌊 COSTA DE GÁLDAR · INFORMACIÓN</span><button class="close" onclick="closeDetail()" aria-label="Cerrar">×</button></div>
  <h2>${escapeHtml(s.label)}</h2><p class="lead">${escapeHtml(s.intro)}</p>
- <div class="textbox warning"><p><b>⚠️ No incluida en las 22 actividades recomendadas.</b></p><p>No hay una guagua directa desde el hotel hasta esta costa. La línea 403 va de <b>la estación de Gáldar</b> a Punta de Gáldar, pasando por La Furnia y Los Dos Roques. Desde Guía, utilizar transporte público normalmente exige otro autobús o caminar hasta Gáldar.</p><p>Además, sus horarios ofrecen muy poco margen para visitar la zona con tranquilidad.</p></div>
- <div class="sectiontitle">🚌 Horarios publicados de la línea 403</div>
+ <div class="textbox warning"><p><b> No incluida en las 22 actividades recomendadas.</b></p><p>No hay un bus directo desde el hotel hasta esta costa. La línea 403 va de <b>la estación de Gáldar</b> a Punta de Gáldar, pasando por La Furnia y Los Dos Roques. Desde Guía, utilizar transporte público normalmente exige otro autobús o caminar hasta Gáldar.</p><p>Además, sus horarios ofrecen muy poco margen para visitar la zona con tranquilidad.</p></div>
+ <div class="sectiontitle"> Horarios publicados de la línea 403</div>
  <div class="textbox"><p><b>De Gáldar hacia Punta:</b> lunes a viernes 12:00 y 18:10; sábado 12:00.</p><p><b>De Punta hacia Gáldar:</b> lunes a viernes 07:20, 12:30 y 18:30; sábado 12:30.</p><p><small>Horarios en cabecera, no horas de paso en cada parada. Confirma la expedición, la vuelta y posibles cambios antes de viajar.</small></p></div>
- <div class="sectiontitle">🛡️ Consideraciones</div>
+ <div class="sectiontitle"> Consideraciones</div>
  <div class="textbox warning">A tener en cuenta el horario y la restricción de transporte del viaje. Hay acantilados, roca volcánica y zonas de mar abierto.</div>
  <div class="stackbtn"><a class="btn secondary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${s.lat}%2C${s.lon}">📍 Abrir ubicación ↗</a><a class="btn secondary" target="_blank" rel="noopener" href="https://guaguasglobal.com/lineas-horarios/linea/?id=403">🚌 Horario oficial 403 ↗</a><a class="btn secondary" target="_blank" rel="noopener" href="https://visitgaldar.es/rutas/costa">🌊 Información municipal ↗</a></div>
- <p class="slim">Coordenadas del núcleo de población en los datos Geofabrik / OpenStreetMap. El marcador no identifica un acceso de baño. No se incluyen precios ni tiempos exactos porque no hay un itinerario de transporte seguro verificado bajo las condiciones de este viaje.</p>`;
+ <p class="slim">Coordenadas del núcleo de población en los datos Geofabrik / OpenStreetMap. </p>`;
  document.getElementById('sheetback').classList.add('open');document.getElementById('detail').classList.add('open');document.body.style.overflow='hidden';
 }
 
