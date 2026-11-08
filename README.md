@@ -21,3 +21,10 @@
 - GitHub Pages es público: la página incluye la dirección del alojamiento y fechas del viaje.
 - No distribuir Shapefiles de toda Canarias innecesariamente: el atlas optimizado ya contiene las capas necesarias del norte de Gran Canaria.
 - Atribución visible en el mapa, documentación y `LICENCIA-Y-FUENTE.txt`. Datos cartográficos bajo ODbL 1.0.
+
+## Versión 2: Punta de Gáldar y zoom
+
+- Los controles **+ / − / ♥** están ahora dentro del mapa, arriba a la derecha, tanto en escritorio como en móvil. Rueda del ratón, doble clic y teclado +/− también funcionan.
+- Se añaden tres lugares de interés **con marcadores ocres**: Punta de Gáldar, La Furnia y Los Dos Roques. Sus coordenadas son las de los núcleos de población de la capa Geofabrik. **NO forman parte de los 22 planes** que cumplen con un solo bus desde Guía.
+- La línea 403 enlaza Punta de Gáldar con la estación de Gáldar, pero no con el hotel. Tiene muy pocos servicios de regreso; por eso la página no recomienda esta zona como excursión en solitario.
+- Para actualizar en GitHub, **reemplaza los archivos anteriores** (sobre todo `index.html`, `sw.js` y `atlas.js`), no los subas en una subcarpeta. El nombre de la caché ha cambiado a v2. Si sigues viendo la versión anterior, recarga la web mientras tengas internet o borra el almacenamiento de ese sitio.

@@ -1,5 +1,5 @@
 // Offline-first: every essential file is hosted by the same GitHub Pages site.
-const CACHE='gran-canaria-real-geofabrik-v2026-11-08-1';
+const CACHE='gran-canaria-real-geofabrik-v2026-11-08-2';
 const CORE=['./','./index.html','./atlas.js','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('gran-canaria-real-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));

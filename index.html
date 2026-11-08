@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/><meta name="theme-color" content="#113e3b"/>
 <title>Mi escapada por Gran Canaria · 11–14 noviembre</title>
-<meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="default"/><meta name="apple-mobile-web-app-title" content="Gran Canaria"/><link rel="manifest" href="manifest.webmanifest"/><meta name="description" content="22 planes asequibles y accesibles desde Santa María de Guía, con mapa, seguridad, precios, trayectos y horarios de guagua." />
+<meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="default"/><meta name="apple-mobile-web-app-title" content="Gran Canaria"/><link rel="manifest" href="manifest.webmanifest"/><meta name="description" content="22 planes desde Santa María de Guía, callejero real offline y zona de Punta de Gáldar identificada como acceso complicado." />
 
 <style>
 :root{--bg:#f6f6ef;--ink:#183b38;--sub:#66817b;--forest:#194a43;--olive:#79a480;--coral:#e7644e;--pale:#eaf3e7;--border:#e1e9e3;--white:#fff;--shadow:0 12px 32px rgba(20,54,49,.075)}
@@ -31,6 +31,17 @@
 .mapSource{position:absolute;right:7px;bottom:7px;background:rgba(255,255,255,.92);font-size:9px;color:#42615d;border-radius:7px;padding:3px 6px;pointer-events:none;box-shadow:0 1px 4px #0002}
 .maptools .zoomkey{font-size:19px;font-weight:800;min-width:40px;min-height:38px;border-color:#a7bcb2;background:#fff}
 .mapcaption a{color:#276758;text-decoration:underline}
+
+/* Mapas de escritorio y móvil: controles de zoom dentro del mapa y accesibles siempre */
+.mapFloatTools{position:absolute;top:12px;right:12px;z-index:12;display:flex;flex-direction:column;gap:6px;filter:drop-shadow(0 3px 8px rgba(20,56,50,.18))}
+.mapFloatTools button{display:grid;place-items:center;width:48px;height:48px;border-radius:12px;border:1px solid #b6c7bf;background:rgba(255,255,255,.97);color:#1c5447;font-size:28px;font-weight:780;cursor:pointer;touch-action:manipulation;box-shadow:0 1px 5px #2a5b4d1a}
+.mapFloatTools button:last-child{font-size:23px;color:#ba4e49}
+.mapFloatTools button:hover{background:#edf7ee}.mapFloatTools button:active{transform:scale(.96)}
+.legend .amber{background:#c47b26}
+.coastNotice{background:#fff8ea;border:1px solid #ecd4ae;border-radius:11px;color:#694e33;padding:10px 12px;margin-top:10px;line-height:1.55;font-size:11px}
+.coastNotice strong{display:block;color:#86571d;margin-bottom:3px;font-size:12px}
+.coastNotice button{border:0;background:transparent;color:#86571d;font-weight:800;text-decoration:underline;cursor:pointer;padding:4px 0 0}
+@media(max-width:550px){.mapFloatTools{top:9px;right:9px}.mapFloatTools button{width:42px;height:42px;font-size:25px}.mapFloatTools button:last-child{font-size:22px}}
 </style></head>
 <body>
 <header class="top"><div class="headrow"><div class="eyebrow">🌿 UNA ESCAPADA PARA ELEGIR A TU RITMO</div><div class="pill">11—14 NOV · 2026</div></div><h1>Un pedacito de <em>Gran Canaria</em> para ti.</h1><p>Playas, bosques, miradores y rincones tranquilos desde Santa María de Guía. Escoge los planes que más te gusten: todos cuestan menos de 20 € según las estimaciones, y se llega caminando o con una sola guagua por trayecto.</p><div class="tripmeta"><span>🏡 Base: C. Pérez Galdós 2 · Santa María de Guía</span><span>🗓️ Miércoles 11 (llegada) — sábado 14 (salida)</span><span>💶 22 planes por menos de 20 €</span></div></header>
@@ -40,7 +51,8 @@
  <div class="tabs" role="tablist" aria-label="Filtrar planes por día"><button class="tab on" data-day="Todos">Todos los planes</button><button class="tab" data-day="Mié 11">Mié 11 · llegada</button><button class="tab" data-day="Jue 12">Jue 12</button><button class="tab" data-day="Vie 13">Vie 13</button><button class="tab" data-day="Sáb 14">Sáb 14 · salida</button></div>
  <div class="layout">
  <div class="column"><div class="filterbar"><input class="search" id="search" type="search" placeholder="🔎 Buscar playa, bosque, mirador…" aria-label="Buscar actividades"/><div class="tools"><select id="category" aria-label="Filtrar por tipo"><option value="Todos">Todas las categorías</option><option>Naturaleza</option><option>Costa y playas</option><option>Miradores</option><option>Paseos</option><option>Cultura</option></select><select id="order" aria-label="Ordenar actividades"><option value="recommended">⭐ Más recomendados</option><option value="price">💶 Precio: menor</option><option value="time">🕒 Más cercanos</option><option value="distance">📏 Distancia</option></select><button class="toggle" id="favoritesOnly">♡ Solo favoritos</button></div></div><p class="total" id="count"></p><div class="items" id="items"></div></div>
- <div class="mapbox"><div class="mapframe"><div class="mapheader"><h2>🗺️ Un mapa de tus planes</h2><span>Casa Verde de Guía · ♥ en rojo</span></div><div class="map" id="map" aria-label="Mapa de las actividades"><div id="fallbackMap"></div></div><div class="legend"><span><i class="red"></i>Hotel / punto de partida</span><span><i class="green"></i>Actividades disponibles</span><span>👆 Toca un punto o una tarjeta</span></div><div class="maptools"><button class="zoomkey" onclick="zoomMap(1.65)" aria-label="Acercar">＋</button><button class="zoomkey" onclick="zoomMap(1/1.65)" aria-label="Alejar">－</button><button id="generalButton" onclick="showAll()">🗺️ Ver todos</button><button id="closeButton" onclick="focusHotel()">♥ Mi alojamiento</button><a class="btn secondary" style="font-size:11px;padding:8px 11px" href="https://www.google.com/maps/search/?api=1&query=Calle%20P%C3%A9rez%20Gald%C3%B3s%202%2C%20Santa%20Mar%C3%ADa%20de%20Gu%C3%ADa%2C%20Gran%20Canaria" target="_blank" rel="noopener">📍 Hotel en Google Maps ↗</a></div><div class="mapcaption" id="mapcaption">Mapa de calles, senderos, playas, parques y edificios de Geofabrik / OpenStreetMap, disponible sin internet. Los horarios en tiempo real y enlaces externos sí requieren conexión.</div></div></div>
+ <div class="mapbox"><div class="mapframe"><div class="mapheader"><h2>🗺️ Un mapa de tus planes</h2><span>Casa Verde de Guía · ♥ en rojo</span></div><div class="map" id="map" aria-label="Mapa de las actividades"><div id="fallbackMap"></div>
+ <div class="mapFloatTools" aria-label="Controles del mapa"><button type="button" onclick="zoomMap(1.7)" aria-label="Acercar mapa" title="Acercar (+)">+</button><button type="button" onclick="zoomMap(1/1.7)" aria-label="Alejar mapa" title="Alejar (−)">−</button><button type="button" onclick="focusHotel()" aria-label="Centrar en el alojamiento" title="Ir al hotel">♥</button></div></div><div class="legend"><span><i class="red"></i>Hotel / punto de partida</span><span><i class="green"></i>Actividades recomendadas</span><span><i class="amber"></i>Costa de Gáldar · acceso complicado</span><span>👆 Toca un punto o una tarjeta</span></div><div class="maptools"><button id="generalButton" onclick="showAll()">🗺️ Ver todos</button><button id="coastButton" onclick="focusCoast()">🌊 Punta de Gáldar</button><button id="closeButton" onclick="focusHotel()">♥ Mi alojamiento</button><a class="btn secondary" style="font-size:11px;padding:8px 11px" href="https://www.google.com/maps/search/?api=1&query=Calle%20P%C3%A9rez%20Gald%C3%B3s%202%2C%20Santa%20Mar%C3%ADa%20de%20Gu%C3%ADa%2C%20Gran%20Canaria" target="_blank" rel="noopener">📍 Hotel en Google Maps ↗</a></div><div class="coastNotice"><strong>🌊 ¿Y Punta de Gáldar?</strong> La encontrarás en el mapa con marcadores ocres, junto a La Furnia y Los Dos Roques. Se muestran como lugares de interés, <b>no como excursiones recomendadas</b>: la línea 403 sale de Gáldar y tiene muy pocas vueltas. <button type="button" onclick="focusCoast()">Ver la zona en el mapa →</button></div><div class="mapcaption" id="mapcaption">Mapa de calles, senderos, playas, parques y edificios de Geofabrik / OpenStreetMap, disponible sin internet. Los horarios en tiempo real y enlaces externos sí requieren conexión.</div></div></div>
  </div>
  <div class="bottomnote"><strong>Información para viajar tranquila.</strong> Los tiempos, distancias y precios provienen del catálogo del viaje y son <b>estimaciones</b>, no cotizaciones ni navegación en tiempo real. «Seguridad» es una evaluación orientativa, no una garantía: usa calzado adecuado, ve con luz, revisa mar y meteorología, y comunica tu itinerario. Los horarios de Global indicados en las fichas son salidas <b>desde la cabecera de línea</b>, no la hora exacta en Guía. La 103 puede tener trayectos que no llegan a Puerto de las Nieves. <b>Emergencias: 112.</b> Fuentes: <a href="https://guaguasglobal.com/" target="_blank" rel="noopener">Global</a> · <a href="https://guaguasglobal.com/lineas-horarios/linea/?id=103" target="_blank" rel="noopener">Línea 103</a> · <a href="https://guaguasglobal.com/lineas-horarios/linea/?id=105" target="_blank" rel="noopener">Línea 105</a> · <a href="https://guaguasglobal.com/lineas-horarios/linea/?id=124" target="_blank" rel="noopener">Línea 124</a> · <a href="https://guaguasglobal.com/estado-servicio/huelga-general-del-11-de-noviembre-de-2026-servicios-minimos/" target="_blank" rel="noopener">Huelga 11/11</a>.</div>
  <div class="foot">Hecho para explorar sin afán. 🌊🌲 &nbsp;·&nbsp; Mapa y fichas disponibles sin internet &nbsp;·&nbsp; Los favoritos se guardan solamente en tu dispositivo.</div>
@@ -78,6 +90,18 @@ document.querySelectorAll('[data-day]').forEach(b=>b.addEventListener('click',()
 document.getElementById('favoritesOnly').addEventListener('click',e=>{e.target.classList.toggle('on');render()});
 // Fully offline, dependency-free vector street map. Data: © OpenStreetMap contributors, Geofabrik (ODbL).
 const GC=window.GC_ATLAS;
+
+// Puntos geográficos reales de la costa de Gáldar, verificados en la capa places de Geofabrik.
+// Estos lugares NO se incluyen en los 22 planes aptos para una guagua directa desde Guía.
+const COAST_SITES=[
+ {id:'punta',label:'Punta de Gáldar',short:'P',lat:28.1692257,lon:-15.6834677,
+  intro:'Pueblo costero y paisaje de roca volcánica. El Ayuntamiento de Gáldar describe una piscina natural en esta zona; el marcador corresponde al núcleo de población, no a una entrada de baño verificada.'},
+ {id:'furnia',label:'La Furnia',short:'F',lat:28.1610687,lon:-15.6746193,
+  intro:'Núcleo costero con piscina natural junto a un acantilado. El Ayuntamiento indica que se accede por una escalera larga; no está recomendado entrar al agua sin comprobar el estado del mar.'},
+ {id:'roques',label:'Los Dos Roques',short:'R',lat:28.1579245,lon:-15.6704961,
+  intro:'Pequeño núcleo de la costa volcánica al norte de Gáldar. Punto de referencia geográfico, no acceso verificado a un sendero o zona de baño.'}
+];
+
 const ORIGIN={lon:-15.63,lat:28.14}, EARTH=6378137;
 const originX=EARTH*ORIGIN.lon*Math.PI/180,originY=EARTH*Math.log(Math.tan(Math.PI/4+ORIGIN.lat*Math.PI/360));
 function merc(lon,lat){return [EARTH*lon*Math.PI/180-originX,EARTH*Math.log(Math.tan(Math.PI/4+lat*Math.PI/360))-originY]}
@@ -161,6 +185,23 @@ function drawMarkers(){
   ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#fff';ctx.font='bold 11px system-ui';ctx.fillText(String(a.id),x,y+.6);
   renderedPins.push({id:a.id,x,y,r:rad+10});
  }
+ // Miradores y costa de Punta de Gáldar: presentes en el atlas, no recomendados como excursiones de un solo bus.
+ for(const s of COAST_SITES){
+  const [x,y]=toScreen(...merc(s.lon,s.lat));
+  if(x<-35||x>mapW+35||y<-35||y>mapH+35)continue;
+  const r=15;
+  ctx.beginPath();ctx.arc(x,y,r,0,2*Math.PI);
+  ctx.fillStyle='#c47b26';ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.stroke();
+  ctx.font='800 12px system-ui';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(s.short,x,y+.6);
+  if(mapZoom>=13.6){
+   const lab=s.label;ctx.font='700 11px system-ui';const ww=Math.min(ctx.measureText(lab).width+18,162);
+   const lx=Math.max(ww/2+4,Math.min(mapW-ww/2-4,x)),ly=y+29;
+   if(ly>10&&ly<mapH-15){ctx.fillStyle='rgba(255,255,255,.96)';ctx.strokeStyle='#e3bb87';ctx.lineWidth=1;
+    ctx.beginPath();ctx.roundRect(lx-ww/2,ly-12,ww,23,8);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#8c531c';ctx.textAlign='center';ctx.fillText(lab,lx,ly,ww-12);}
+  }
+  renderedPins.push({id:'coast:'+s.id,x,y,r:25});
+ }
  const [x,y]=toScreen(...merc(HOTEL.lon,HOTEL.lat));
  ctx.beginPath();ctx.arc(x,y,21,0,Math.PI*2);ctx.fillStyle='#d54b47';ctx.fill();ctx.strokeStyle='white';ctx.lineWidth=4;ctx.stroke();
  ctx.font='bold 21px system-ui';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('♥',x,y+1);
@@ -200,13 +241,15 @@ function zoomAround(targetZoom,px,py){const anchor=fromScreen(px,py);mapZoom=Mat
 function zoomMap(factor){zoomAround(mapZoom+Math.log2(factor),mapW/2,mapH/2)}
 function mapClick(x,y){let hit=null,dmin=1e8;
  for(const p of renderedPins){const d=Math.hypot(x-p.x,y-p.y);if(d<=p.r&&d<dmin){hit=p;dmin=d;}}
- if(hit){if(hit.id==='hotel')focusHotel();else openDetail(hit.id)}
+ if(hit){if(hit.id==='hotel')focusHotel();else if(typeof hit.id==='string'&&hit.id.startsWith('coast:'))openCoastInfo(hit.id.slice(6));else openDetail(hit.id)}
 }
 function setupMap(){if(mapInitDone)return;mapInitDone=true;
  const e=document.getElementById('fallbackMap');e.innerHTML='<canvas id="gcCanvas" role="img" aria-label="Mapa offline con carreteras y senderos reales de Gran Canaria. Toca los puntos numerados para ver la actividad."></canvas><div class="mapSource">© OpenStreetMap contributors · Geofabrik</div>';
  mapCanvas=document.getElementById('gcCanvas');mapCtx=mapCanvas.getContext('2d',{alpha:false});
- mapCanvas.style.cssText='height:100%;width:100%;touch-action:none;display:block;cursor:grab';
+ mapCanvas.style.cssText='height:100%;width:100%;touch-action:none;display:block;cursor:grab';mapCanvas.tabIndex=0;
  new ResizeObserver(mapResize).observe(e);
+ mapCanvas.addEventListener('dblclick',ev=>{ev.preventDefault();const r=mapCanvas.getBoundingClientRect();zoomAround(mapZoom+1,ev.clientX-r.left,ev.clientY-r.top)});
+ mapCanvas.addEventListener('keydown',ev=>{if(['+','=','Add'].includes(ev.key)){ev.preventDefault();zoomMap(1.7)}if(['-','_','Subtract'].includes(ev.key)){ev.preventDefault();zoomMap(1/1.7)}});
  mapCanvas.addEventListener('wheel',ev=>{ev.preventDefault();const r=mapCanvas.getBoundingClientRect();zoomAround(mapZoom+(ev.deltaY<0?.42:-.42),ev.clientX-r.left,ev.clientY-r.top)},{passive:false});
  mapCanvas.addEventListener('pointerdown',ev=>{if(ev.pointerType==='mouse'&&ev.button!==0)return;ev.preventDefault();mapCanvas.setPointerCapture(ev.pointerId);
   mapPointers.set(ev.pointerId,{x:ev.clientX,y:ev.clientY});mapMoved=false;
@@ -228,7 +271,7 @@ function setupMap(){if(mapInitDone)return;mapInitDone=true;
  mapCanvas.addEventListener('pointercancel',ev=>{mapPointers.delete(ev.pointerId);mapTouchInfo=null;mapMoved=true;});
  mapResize();
  const caption=document.getElementById('mapcaption');
- caption.innerHTML='<b>Mapa real sin conexión:</b> carreteras, senderos, parques, playas y edificios derivados del extracto de Geofabrik (7 de noviembre de 2026). Desliza, pellizca o usa los botones +/−. Los puntos verdes abren las fichas. No es navegación GPS ni calcula rutas. <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors · ODbL</a> · <a href="https://download.geofabrik.de/africa/canary-islands.html" target="_blank" rel="noopener">Geofabrik</a>.';
+ caption.innerHTML='<b>Mapa real sin conexión:</b> carreteras, senderos, parques, playas y edificios derivados del extracto de Geofabrik (7 de noviembre de 2026). Desliza, pellizca o usa los botones +/−. Los puntos verdes abren las fichas; los ocres indican costa de Gáldar con acceso complicado, fuera de las 22 opciones recomendadas. No es navegación GPS ni calcula rutas. <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors · ODbL</a> · <a href="https://download.geofabrik.de/africa/canary-islands.html" target="_blank" rel="noopener">Geofabrik</a>.';
 }
 function renderFallback(){setupMap();scheduleMap()}
 function refreshMarkers(){renderFallback()}
@@ -243,6 +286,26 @@ function showAll(){
  mapZoom=Math.max(10.3,Math.min(16,Math.log2(40075016/(256*mp))));scheduleMap();
  document.getElementById('map').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
+
+
+function focusCoast(){
+ const center=merc(-15.6773,28.1636);mapCenter=center;mapZoom=13.7;scheduleMap();
+ document.getElementById('map').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function openCoastInfo(id){
+ const s=COAST_SITES.find(a=>a.id===id);if(!s)return;
+ document.getElementById('detailContent').innerHTML=`<div class="sheethead"><span class="eyebrow" style="color:#ad702d">🌊 COSTA DE GÁLDAR · INFORMACIÓN</span><button class="close" onclick="closeDetail()" aria-label="Cerrar">×</button></div>
+ <h2>${escapeHtml(s.label)}</h2><p class="lead">${escapeHtml(s.intro)}</p>
+ <div class="textbox warning"><p><b>⚠️ No incluida en las 22 actividades recomendadas.</b></p><p>No hay una guagua directa desde el hotel hasta esta costa. La línea 403 va de <b>la estación de Gáldar</b> a Punta de Gáldar, pasando por La Furnia y Los Dos Roques. Desde Guía, utilizar transporte público normalmente exige otro autobús o caminar hasta Gáldar.</p><p>Además, sus horarios ofrecen muy poco margen para visitar la zona con tranquilidad.</p></div>
+ <div class="sectiontitle">🚌 Horarios publicados de la línea 403</div>
+ <div class="textbox"><p><b>De Gáldar hacia Punta:</b> lunes a viernes 12:00 y 18:10; sábado 12:00.</p><p><b>De Punta hacia Gáldar:</b> lunes a viernes 07:20, 12:30 y 18:30; sábado 12:30.</p><p><small>Horarios en cabecera, no horas de paso en cada parada. Confirma la expedición, la vuelta y posibles cambios antes de viajar.</small></p></div>
+ <div class="sectiontitle">🛡️ Seguridad para ir sola</div>
+ <div class="textbox warning">No recomendaría esta excursión sola con el horario y la restricción de transporte del viaje. Hay acantilados, roca volcánica y zonas de mar abierto. No accedas al agua por este marcador ni interpretes un camino dibujado como una ruta segura.</div>
+ <div class="stackbtn"><a class="btn secondary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${s.lat}%2C${s.lon}">📍 Abrir ubicación ↗</a><a class="btn secondary" target="_blank" rel="noopener" href="https://guaguasglobal.com/lineas-horarios/linea/?id=403">🚌 Horario oficial 403 ↗</a><a class="btn secondary" target="_blank" rel="noopener" href="https://visitgaldar.es/rutas/costa">🌊 Información municipal ↗</a></div>
+ <p class="slim">Coordenadas del núcleo de población en los datos Geofabrik / OpenStreetMap. El marcador no identifica un acceso de baño. No se incluyen precios ni tiempos exactos porque no hay un itinerario de transporte seguro verificado bajo las condiciones de este viaje.</p>`;
+ document.getElementById('sheetback').classList.add('open');document.getElementById('detail').classList.add('open');document.body.style.overflow='hidden';
+}
+
 
 window.openDetail=openDetail;window.closeDetail=closeDetail;window.focusHotel=focusHotel;window.showAll=showAll;window.chooseDay=chooseDay;window.toggleFav=toggleFav;
 render();
